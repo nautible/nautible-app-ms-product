@@ -1,0 +1,191 @@
+openapi: 3.0.3
+info:
+  title: nautible-app-product API
+  description: nautible Product Service
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/
+    description: localhost
+paths:
+  /products/hello:
+    get:
+      tags: 
+        - RestProductService
+      operationId: hello
+      summary: Call Hello
+      description: Return Hello
+      responses:
+        200:
+          description: Successful Operation
+          content:
+            text/plain:
+              schema:
+                type: string
+  /products/{id}:
+    get:
+      tags: 
+        - RestProductService
+      operationId: find
+      summary: Find Product by id
+      description: Return Product
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "[0-9]*"
+            nullable: false
+      responses:
+        200:
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProductResponse'
+  /products:
+    get:
+      tags: 
+        - RestProductService
+      operationId: findBy
+      summary: Find Products By price, name
+      description: Return Products
+      parameters:
+        - name: greater
+          in: query
+          schema:
+            type: string
+            pattern: "[0-9]*"
+        - name: less
+          in: query
+          schema:
+            type: string
+            pattern: "[0-9]*"
+        - name: name
+          in: query
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionGetProductResponse'
+    put:
+      tags: 
+        - RestProductService
+      operationId: update
+      summary: Update Product
+      description: Update Product
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProductRequest'
+        required: true
+      responses:
+        200:
+          description: Successful Operation
+    post:
+      tags: 
+        - RestProductService
+      operationId: register
+      summary: Create Product
+      description: Create Product
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductRequest'
+        required: true
+      responses:
+        200:
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateProductResponse'
+components:
+  schemas:
+    UpdateProductRequest:
+      type: object
+      required:
+        - "id"
+        - "name"
+        - "maker"
+        - "description"
+        - "price"
+      properties:
+        id:
+          type: string
+          example: "11"
+        name:
+          type: string
+          maxLength: 255
+          example: "Nintendo Switch Lite イエロー"
+        maker:
+          type: string
+          maxLength: 32
+          example: "任天堂"
+        description:
+          type: string
+          maxLength: 255
+          example: "ゲーム機本体"
+        price:
+          type: integer
+          pattern: "[0-9]*"
+          format: int64
+          example: 21345
+    CreateProductRequest:
+      type: object
+      required:
+        - "name"
+        - "maker"
+        - "description"
+        - "price"
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          example: "Nintendo Switch Lite イエロー"
+        maker:
+          type: string
+          maxLength: 32
+          example: "任天堂"
+        description:
+          type: string
+          maxLength: 255
+          example: "ゲーム機本体"
+        price:
+          type: integer
+          pattern: "[0-9]*"
+          format: int64
+          example: 21345
+    GetProductResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "11"
+        name:
+          type: string
+          example: "Nintendo Switch Lite イエロー"
+        maker:
+          type: string
+          example: "任天堂"
+        description:
+          type: string
+          example: "ゲーム機本体"
+        price:
+          type: string
+          example: "21345"
+    CollectionGetProductResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/GetProductResponse'
+    CreateProductResponse:
+      type: object
+      properties:
+        id:
+          type: string

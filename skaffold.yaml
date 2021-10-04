@@ -1,0 +1,106 @@
+apiVersion: skaffold/v2beta9
+kind: Config
+metadata:
+  name: nautible-app-product
+build:
+  artifacts:
+  - image: public.ecr.aws/nautible/nautible-app-product
+    custom:
+      buildCommand: build-fastjar.cmd
+      dependencies:
+        paths:
+          - "."
+        ignore:
+          - "target"
+  local:
+    push: true
+portForward:
+- resourceType: Service
+  resourceName: nautible-app-product
+  namespace: nautible-app
+  port: 8080
+profiles:
+- name: dev
+  build:
+    tagPolicy:
+      sha256: {}
+    artifacts:
+    - image: public.ecr.aws/nautible/nautible-app-product
+      custom:
+        buildCommand: build-fastjar.cmd
+        dependencies:
+          paths:
+            - "."
+          ignore:
+            - "target"
+    local:
+      push: true
+- name: local-dev
+  build:
+    tagPolicy:
+      sha256: {}
+    artifacts:
+    - image: ogis/nautible-app-product-mysql
+      context: ./src/test/docker/database
+      docker:
+        dockerfile: ./Dockerfile
+    - image: ogis/nautible-app-product
+      custom:
+        buildCommand: build-fastjar.cmd
+        dependencies:
+          paths:
+            - "."
+          ignore:
+            - "target"
+    local:
+      push: false
+  deploy:
+    kustomize:
+      paths: 
+        - ../nautible-app-product-manifest/overlays/local-dev
+- name: local-dev-native
+  build:
+    tagPolicy:
+      sha256: {}
+    artifacts:
+    - image: ogis/nautible-app-product-mysql
+      context: ./src/test/docker/database
+      docker:
+        dockerfile: ./Dockerfile
+    - image: ogis/nautible-app-product
+      custom:
+        buildCommand: build-native.cmd
+        dependencies:
+          paths:
+            - "."
+          ignore:
+            - "target"
+    local:
+      push: false
+  deploy:
+    kustomize:
+      paths: 
+        - ../nautible-app-product-manifest/overlays/local-dev
+- name: local-dev-jar
+  build:
+    tagPolicy:
+      sha256: {}
+    artifacts:
+    - image: ogis/nautible-app-product-mysql
+      context: ./src/test/docker/database
+      docker:
+        dockerfile: ./Dockerfile
+    - image: ogis/nautible-app-product
+      custom:
+        buildCommand: build-jar.cmd
+        dependencies:
+          paths:
+            - "."
+          ignore:
+            - "target"
+    local:
+      push: false
+  deploy:
+    kustomize:
+      paths: 
+        - ../nautible-app-product-manifest/overlays/local-dev

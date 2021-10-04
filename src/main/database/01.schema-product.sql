@@ -1,0 +1,15 @@
+DROP SCHEMA IF EXISTS productdb;
+CREATE SCHEMA productdb;
+USE productdb;
+SET AUTOCOMMIT=0;
+
+DROP TABLE IF EXISTS `Product`;
+
+CREATE TABLE `Product` (
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  maker VARCHAR(32) NOT NULL,
+  description VARCHAR(255) NOT NULL,
+  price INTEGER NOT NULL,
+  PRIMARY KEY (`id`)
+);
