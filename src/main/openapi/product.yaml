@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: nautible-app-product API
+  title: nautible-app-ms-product API
   description: nautible Product Service
   version: 1.0.0
 servers:
