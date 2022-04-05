@@ -1,10 +1,10 @@
 apiVersion: skaffold/v2beta9
 kind: Config
 metadata:
-  name: nautible-app-product
+  name: nautible-app-ms-product
 build:
   artifacts:
-  - image: public.ecr.aws/nautible/nautible-app-product
+  - image: public.ecr.aws/nautible/nautible-app-ms-product
     custom:
       buildCommand: build-fastjar.cmd
       dependencies:
@@ -16,8 +16,8 @@ build:
     push: true
 portForward:
 - resourceType: Service
-  resourceName: nautible-app-product
-  namespace: nautible-app
+  resourceName: nautible-app-ms-product
+  namespace: nautible-app-ms
   port: 8080
 profiles:
 - name: dev
@@ -25,7 +25,7 @@ profiles:
     tagPolicy:
       sha256: {}
     artifacts:
-    - image: public.ecr.aws/nautible/nautible-app-product
+    - image: public.ecr.aws/nautible/nautible-app-ms-product
       custom:
         buildCommand: build-fastjar.cmd
         dependencies:
@@ -40,11 +40,11 @@ profiles:
     tagPolicy:
       sha256: {}
     artifacts:
-    - image: ogis/nautible-app-product-mysql
+    - image: ogis/nautible-app-ms-product-mysql
       context: ./src/test/docker/database
       docker:
         dockerfile: ./Dockerfile
-    - image: ogis/nautible-app-product
+    - image: ogis/nautible-app-ms-product
       custom:
         buildCommand: build-fastjar.cmd
         dependencies:
@@ -57,17 +57,17 @@ profiles:
   deploy:
     kustomize:
       paths: 
-        - ../nautible-app-product-manifest/overlays/local-dev
+        - ../nautible-app-ms-product-manifest/overlays/local-dev
 - name: local-dev-native
   build:
     tagPolicy:
       sha256: {}
     artifacts:
-    - image: ogis/nautible-app-product-mysql
+    - image: ogis/nautible-app-ms-product-mysql
       context: ./src/test/docker/database
       docker:
         dockerfile: ./Dockerfile
-    - image: ogis/nautible-app-product
+    - image: ogis/nautible-app-ms-product
       custom:
         buildCommand: build-native.cmd
         dependencies:
@@ -80,17 +80,17 @@ profiles:
   deploy:
     kustomize:
       paths: 
-        - ../nautible-app-product-manifest/overlays/local-dev
+        - ../nautible-app-ms-product-manifest/overlays/local-dev
 - name: local-dev-jar
   build:
     tagPolicy:
       sha256: {}
     artifacts:
-    - image: ogis/nautible-app-product-mysql
+    - image: ogis/nautible-app-ms-product-mysql
       context: ./src/test/docker/database
       docker:
         dockerfile: ./Dockerfile
-    - image: ogis/nautible-app-product
+    - image: ogis/nautible-app-ms-product
       custom:
         buildCommand: build-jar.cmd
         dependencies:
@@ -103,4 +103,4 @@ profiles:
   deploy:
     kustomize:
       paths: 
-        - ../nautible-app-product-manifest/overlays/local-dev
+        - ../nautible-app-ms-product-manifest/overlays/local-dev
