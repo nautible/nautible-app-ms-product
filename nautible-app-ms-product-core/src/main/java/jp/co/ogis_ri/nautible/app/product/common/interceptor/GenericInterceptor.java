@@ -17,7 +17,7 @@ public abstract class GenericInterceptor {
         String targetMethodName = ctx.getMethod().getName();
         logger.info("start " + targetClassName + "#" + targetMethodName + ".");
 
-        Object ret = null;
+        Object ret;
         try {
             ret = ctx.proceed();
         } finally {
