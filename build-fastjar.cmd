@@ -1,8 +1,8 @@
-cmd /c "mvn clean package -DskipTests=true -Dquarkus.package.type=fast-jar"
+cmd /c "mvn clean package -P %1 -Dquarkus.package.type=fast-jar -DskipTests=true"
 if not %ERRORLEVEL% == 0 (
     echo "[ERROR] ----------------------[ maven build error ]-----------------------"
     exit 1
 )
 
 :dockerbuild
-cmd /c "docker build -t %IMAGE% -f ./src/main/docker/Dockerfile.fast-jar ."
+cmd /c "cd nautible-app-ms-product-build & docker build -t %IMAGE% -f ./src/main/docker/Dockerfile.jvm ."
