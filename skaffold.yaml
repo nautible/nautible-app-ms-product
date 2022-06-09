@@ -18,6 +18,10 @@ build:
           - "**\\target\\**"
   local:
     push: true
+deploy:
+  kustomize:
+    paths:
+      - ../nautible-app-ms-product-manifest/overlays/aws/dev
 portForward:
 - resourceType: Service
   resourceName: nautible-app-ms-product
@@ -40,6 +44,10 @@ profiles:
             - "**\\target\\**"
     local:
       push: true
+  deploy:
+    kustomize:
+      paths:
+        - ../nautible-app-ms-order-manifest/overlays/azure/dev
 - name: local-dev
   build:
     tagPolicy:
