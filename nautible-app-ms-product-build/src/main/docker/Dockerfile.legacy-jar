@@ -29,8 +29,9 @@ ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en'
 # Install java and the run-java script
 # Also set up permissions for user `1001`
 # If use http proxy, rewrite https_proxy variable
-RUN export https_proxy=http://proxy-user:proxy-user-password@proxy-url \
-    && microdnf install curl ca-certificates ${JAVA_PACKAGE} \
+# RUN export https_proxy=http://proxy-user:proxy-user-password@proxy-url \
+#     && microdnf install curl ca-certificates ${JAVA_PACKAGE} \
+RUN microdnf install curl ca-certificates ${JAVA_PACKAGE} \
     && microdnf update \
     && microdnf clean all \
     && mkdir /deployments \
