@@ -5,7 +5,7 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ feature/issue2 ]
+    branches: [ develop ]
 
 jobs:
   build:
@@ -21,7 +21,6 @@ jobs:
     - name: Checkout manifest repo
       uses: actions/checkout@v2
       with:
-        ref: feature/issue2
         repository: nautible/nautible-app-ms-product-manifest
         path: nautible-app-ms-product-manifest
         token: ${{ secrets.PAT }}
