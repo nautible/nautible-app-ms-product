@@ -3,117 +3,38 @@ kind: Config
 metadata:
   name: nautible-app-ms-product
 build:
-  tagPolicy:
-    sha256: {}
   artifacts:
   - image: public.ecr.aws/nautible/nautible-app-ms-product
     # Dockerfileを指定するやり方では、skaffoldはappのjarファイル監視し、javaコードの変更などを監視しない。
     # そのため、skaffold customを利用し、プロジェクト全体のソースを監視し、変更があった場合にはapp image ビルドを行う
     custom:
-      buildCommand: build-fastjar.cmd aws
+      buildCommand: build.cmd aws
       dependencies:
         paths:
           - "."
         ignore:
           - "**\\target\\**"
   local:
-    push: true
+    push: false
 deploy:
   kustomize:
     paths:
-      - ../nautible-app-ms-product-manifest/overlays/aws/dev
-portForward:
-- resourceType: Service
-  resourceName: nautible-app-ms-product
-  namespace: nautible-app-ms
-  port: 8080
+      - ../nautible-app-ms-product-manifest/overlays/local-dev
+
 profiles:
 - name: aws
 - name: azure
   build:
-    tagPolicy:
-      sha256: {}
     artifacts:
     - image: nautibledevacr.azurecr.io/nautible-app-ms-product
       custom:
-        buildCommand: build-fastjar.cmd azure
+        buildCommand: build.cmd azure
         dependencies:
           paths:
             - "."
           ignore:
             - "**\\target\\**"
-    local:
-      push: true
   deploy:
     kustomize:
       paths:
-        - ../nautible-app-ms-order-manifest/overlays/azure/dev
-- name: local-dev
-  build:
-    tagPolicy:
-      sha256: {}
-    artifacts:
-    - image: ogis/nautible-app-ms-product-mysql
-      context: ./nautible-app-ms-product-build/src/test/docker/database
-      docker:
-        dockerfile: ./Dockerfile
-    - image: ogis/nautible-app-ms-product
-      custom:
-        buildCommand: build-fastjar.cmd default
-        dependencies:
-          paths:
-            - "."
-          ignore:
-            - "**\\target\\**"
-    local:
-      push: false
-  deploy:
-    kustomize:
-      paths: 
-        - ../nautible-app-ms-product-manifest/overlays/local-dev
-- name: local-dev-native
-  build:
-    tagPolicy:
-      sha256: {}
-    artifacts:
-    - image: ogis/nautible-app-ms-product-mysql
-      context: ./nautible-app-ms-product-build/src/test/docker/database
-      docker:
-        dockerfile: ./Dockerfile
-    - image: ogis/nautible-app-ms-product
-      custom:
-        buildCommand: build-native.cmd default
-        dependencies:
-          paths:
-            - "."
-          ignore:
-            - "**\\target\\**"
-    local:
-      push: false
-  deploy:
-    kustomize:
-      paths: 
-        - ../nautible-app-ms-product-manifest/overlays/local-dev
-- name: local-dev-legacyjar
-  build:
-    tagPolicy:
-      sha256: {}
-    artifacts:
-    - image: ogis/nautible-app-ms-product-mysql
-      context: ./nautible-app-ms-product-build/src/test/docker/database
-      docker:
-        dockerfile: ./Dockerfile
-    - image: ogis/nautible-app-ms-product
-      custom:
-        buildCommand: build-legacyjar.cmd default
-        dependencies:
-          paths:
-            - "."
-          ignore:
-            - "**\\target\\**"
-    local:
-      push: false
-  deploy:
-    kustomize:
-      paths: 
         - ../nautible-app-ms-product-manifest/overlays/local-dev
