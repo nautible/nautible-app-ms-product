@@ -5,11 +5,11 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ main ]
+    branches: [ develop ]
 
 jobs:
   build:
-
+    
     runs-on: ubuntu-latest
 
     env:
@@ -18,7 +18,6 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@v2
-
     - name: Checkout manifest repo
       uses: actions/checkout@v2
       with:
@@ -29,7 +28,6 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 11
-
     - name: Cache Maven packages
       uses: actions/cache@v2
       with:
@@ -37,43 +35,71 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
 
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml -Dmaven.test.skip=true -Dquarkus.package.type=fast-jar
-
+    # AWS
+    - name: pacakge with Maven for aws
+      run: mvn -B package -Dcloud=aws --file pom.xml -Dquarkus.package.type=fast-jar
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
-    
     - name: Login to Amazon public ECR
       id: login-ecr
       run: |
         aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/nautible
-    
-    - name: Customer Build, tag, and push image to Amazon ECR
-      id: build-image-service
+    - name: Product Build, tag, and push image to Amazon ECR
+      id: build-image-service-ecr
       env:
         DOCKER_BUILDKIT: 1
         ECR_REGISTRY: public.ecr.aws/nautible
         ECR_REPOSITORY: nautible-app-ms-product
       run: |
-        cd $GITHUB_WORKSPACE
-        docker build --cache-from=$ECR_REGISTRY/$ECR_REPOSITORY:latest --build-arg BUILDKIT_INLINE_CACHE=1 -t $ECR_REGISTRY/$ECR_REPOSITORY:latest -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ./src/main/docker/Dockerfile.fast-jar .
+        cd $GITHUB_WORKSPACE/nautible-app-ms-product-build
+        docker build --cache-from=$ECR_REGISTRY/$ECR_REPOSITORY:latest --build-arg BUILDKIT_INLINE_CACHE=1 -t $ECR_REGISTRY/$ECR_REPOSITORY:latest -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ./src/main/docker/Dockerfile.jvm .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
+    # Azure
+    - name: pacakge with Maven for Azure
+      run: |
+        cd $GITHUB_WORKSPACE
+        mvn -B clean package -Dcloud=azure --file pom.xml -Dquarkus.package.type=fast-jar
+    - name: Login via Azure CLI
+      id: login-acr
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Login Azure Docker
+      id: login-azure-docker
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}
+        username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
+        password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
+    - name: Product Build, tag, and push image to Azure ACR
+      id: build-image-service-acr
+      env:
+        DOCKER_BUILDKIT: 1
+        ACR_REGISTRY: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}
+        ACR_REPOSITORY: nautible-app-ms-product
+      run: |
+        cd $GITHUB_WORKSPACE/nautible-app-ms-product-build
+        docker build --cache-from=$ACR_REGISTRY/$ACR_REPOSITORY:latest --build-arg BUILDKIT_INLINE_CACHE=1 -t $ACR_REGISTRY/$ACR_REPOSITORY:latest -t $ACR_REGISTRY/$ACR_REPOSITORY:$IMAGE_TAG -f ./src/main/docker/Dockerfile.jvm .
+        docker push $ACR_REGISTRY/$ACR_REPOSITORY:latest
+        docker push $ACR_REGISTRY/$ACR_REPOSITORY:$IMAGE_TAG
+
     - name: pull request
       id: pull-request
       env:
-        tag: update-image-feature-${{ github.sha }}
         token: ${{ secrets.PAT }}
+        tag: update-image-feature-${{ github.sha }}
       run: |
         cd $GITHUB_WORKSPACE/nautible-app-ms-product-manifest
         git checkout -b $tag
-        sed -i 's/image: public.ecr.aws\/nautible\/nautible-app-ms-product:\(.*\)/image: public.ecr.aws\/nautible\/nautible-app-ms-product:'$IMAGE_TAG'/' ./base/product-deployment.yaml
+        sed -i 's/image: public.ecr.aws\/nautible\/nautible-app-ms-product:\(.*\)/image: public.ecr.aws\/nautible\/nautible-app-ms-product:'$IMAGE_TAG'/' ./overlays/aws/dev/product-deployment.yaml 
+        sed -i 's/image: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}\/nautible-app-ms-product:\(.*\)/image: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}\/nautible-app-ms-product:'$IMAGE_TAG'/' ./overlays/azure/dev/product-deployment.yaml 
         git config user.name github-actions
         git config user.email github-actions@github.com
         git add .

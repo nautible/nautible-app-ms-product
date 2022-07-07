@@ -36,9 +36,7 @@ pom.xml.versionsBackup
 release.properties
 
 # Docker
-src/test/docker/database/mysql/data/
+nautible-app-ms-product-build/src/test/docker/database/mysql/data/
 
 # openapi-generator
 .openapi-generator
-src/main/java/jp/co/ogis_ri/nautible/app/product/api/rest
-src/main/openapi/openapi.yaml

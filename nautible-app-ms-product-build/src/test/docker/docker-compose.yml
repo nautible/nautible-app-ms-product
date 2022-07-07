@@ -3,7 +3,7 @@ services:
   mysql:
     container_name: nautible-app-ms-product-mysql
     build:
-      context: ./database
+      context: database
     volumes:
       - ./database/mysql/data:/var/lib/mysql
     environment:
