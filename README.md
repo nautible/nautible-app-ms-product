@@ -35,3 +35,25 @@ Quarkusアプリケーション共通の内容については[こちら](https:/
 - OpenAPI定義参照
   - 例) hello(稼働確認用)
     - http://localhost:8081/products/hello
+
+## サンプルアプリ利用手順
+
+### アプリケーション依存サービスのビルド
+
+```bash
+docker build -t nautible-app-ms-product-mysql:latest -f nautible-app-ms-product-build/src/test/docker/database/Dockerfile .
+```
+
+### アプリケーション依存サービスの起動
+
+manifestリポジトリでマニフェストを適用する
+
+```bash
+kubectl apply -k overlays/(aws|azure)/local-dev/dependencies
+```
+### skaffoldによるアプリケーション起動
+
+```bash
+skaffold dev --profile=(aws|azure) --port-forward
+```
+※wslなどのLinux環境で実行することを前提としています
