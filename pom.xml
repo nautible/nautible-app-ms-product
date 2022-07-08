@@ -1,25 +1,34 @@
 ﻿<?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>jp.co.ogis-ri.nautible.app</groupId>
-  <artifactId>nautible-app-product</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <artifactId>nautible-app-ms-product-parent</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
   <properties>
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
     <maven.compiler.parameters>true</maven.compiler.parameters>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
-    <swagger-annotations.version>1.6.2</swagger-annotations.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <nautible.app.product.groupId>jp.co.ogis-ri.nautible.app</nautible.app.product.groupId>
+    <nautible.app.product.name>nautible-app-ms-product</nautible.app.product.name>
+    <nautible.app.product.version>1.0.0-SNAPSHOT</nautible.app.product.version>
     <quarkus-plugin.version>1.13.6.Final</quarkus-plugin.version>
     <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
     <quarkus.platform.version>1.13.6.Final</quarkus.platform.version>
     <commons-lang3.version>3.11</commons-lang3.version>
+    <swagger-annotations.version>1.6.2</swagger-annotations.version>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
     <openapi-generator-maven-plugin.version>5.0.0</openapi-generator-maven-plugin.version>
+    <maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
+    <jandex.maven.plugin.version>1.1.0</jandex.maven.plugin.version>
   </properties>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -39,188 +48,102 @@
         <artifactId>swagger-annotations</artifactId>
         <version>${swagger-annotations.version}</version>
       </dependency>
+      <dependency>
+        <groupId>${nautible.app.product.groupId}</groupId>
+        <artifactId>${nautible.app.product.name}-core</artifactId>
+        <version>${nautible.app.product.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${nautible.app.product.groupId}</groupId>
+        <artifactId>${nautible.app.product.name}-aws</artifactId>
+        <version>${nautible.app.product.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${nautible.app.product.groupId}</groupId>
+        <artifactId>${nautible.app.product.name}-azure</artifactId>
+        <version>${nautible.app.product.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
-  <dependencies>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-resteasy-jackson</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-hibernate-validator</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-junit5</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.rest-assured</groupId>
-      <artifactId>rest-assured</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-container-image-docker</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-hibernate-orm-panache</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-jdbc-mysql</artifactId>
-    </dependency>
-    <!-- dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-smallrye-openapi</artifactId>
-    </dependency -->
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-logging-json</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.swagger</groupId>
-      <artifactId>swagger-annotations</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-kubernetes</artifactId>
-    </dependency>
-  </dependencies>
+
   <build>
-    <plugins>
-      <plugin>
-        <groupId>io.quarkus</groupId>
-        <artifactId>quarkus-maven-plugin</artifactId>
-        <version>${quarkus-plugin.version}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>generate-code</goal>
-              <goal>generate-code-tests</goal>
-              <goal>build</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${compiler-plugin.version}</version>
-      </plugin>
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>${surefire-plugin.version}</version>
-        <configuration>
-          <systemPropertyVariables>
-            <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-            <maven.home>${maven.home}</maven.home>
-          </systemPropertyVariables>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.openapitools</groupId>
-        <artifactId>openapi-generator-maven-plugin</artifactId>
-        <version>${openapi-generator-maven-plugin.version}</version>
-        <!-- groupId>io.swagger.codegen.v3</groupId>
-        <artifactId>swagger-codegen-maven-plugin</artifactId>
-        <version>3.0.23</version -->
-        <executions>
-          <execution>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-            <configuration>
-              <!-- https://github.com/OpenAPITools/openapi-generator/tree/master/modules/openapi-generator-maven-plugin -->
-              <!-- verbose>true</verbose -->
-              <inputSpec>${project.basedir}/src/main/openapi/product.yaml</inputSpec>
-              <output>${project.basedir}</output>
-              <generatorName>jaxrs-spec</generatorName>
-              <!-- language>jaxrs-spec</language -->
-              <!-- apiPackage>jp.co.ogis_ri.nautible.app.product.api.rest</apiPackage -->
-              <!-- modelPackage>jp.co.ogis_ri.nautible.app.product.api.rest</modelPackage -->
-              <!-- packageName>jp.co.ogis_ri.nautible.app.product</packageName -->
-              <additionalProperties>
-                <additionalProperty>modelNamePrefix=</additionalProperty>
-                <additionalProperty>modelNameSuffix=</additionalProperty>
-                <additionalProperty>apiNamePrefix=</additionalProperty>
-                <additionalProperty>apiNameSuffix=</additionalProperty>
-              </additionalProperties>
-              <configOptions>
-                <!-- https://openapi-generator.tech/docs/generators/jaxrs-spec/ -->
-                <sourceFolder>src/main/java</sourceFolder>
-                <invokerPackage>jp.co.ogis_ri.nautible.app.product</invokerPackage>
-                <apiPackage>jp.co.ogis_ri.nautible.app.product.api.rest</apiPackage>
-                <modelPackage>jp.co.ogis_ri.nautible.app.product.api.rest</modelPackage>
-                <dateLibrary>java8</dateLibrary>
-                <generateSupportingFiles>false</generateSupportingFiles>
-                <generateBuilders>false</generateBuilders>
-                <generatePom>false</generatePom>
-                <hideGenerationTimestamp>true</hideGenerationTimestamp>
-                <interfaceOnly>true</interfaceOnly>
-                <java8>true</java8>
-                <!-- if set quarkus, gen application.properties with mp.openapi.scan.disable=true, -->
-                <!-- and gen Dockerfile.jvm, Dockerfile.native -->
-                <!-- library>quarkus</library -->
-                <openApiNullable>true</openApiNullable>
-                <returnResponse>true</returnResponse>
-                <serializableModel>false</serializableModel>
-                <sortModelPropertiesByRequiredFlag>true</sortModelPropertiesByRequiredFlag>
-                <sortParamsByRequiredFlag>true</sortParamsByRequiredFlag>
-                <useBeanValidation>true</useBeanValidation>
-                <useSwaggerAnnotations>true</useSwaggerAnnotations>
-                <!-- if true, api classname change to tagname. -->
-                <useTags>true</useTags>
-              </configOptions>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.jboss.jandex</groupId>
+          <artifactId>jandex-maven-plugin</artifactId>
+          <version>${jandex.maven.plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>io.quarkus</groupId>
+          <artifactId>quarkus-maven-plugin</artifactId>
+          <version>${quarkus-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${compiler-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${surefire-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.openapitools</groupId>
+          <artifactId>openapi-generator-maven-plugin</artifactId>
+          <version>${openapi-generator-maven-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>${maven-failsafe-plugin.version}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
+
   <profiles>
+    <!--
+      最新のmvn(3.8.5)を利用した場合、quarkus-maven-pluginではコマンドライン引数(-P xxx)でのプロファイル指定が有効とならない。
+      system propertyでのプロファイルの有効化が機能するのでsystem propertyを利用する。
+    -->
     <profile>
-      <id>native</id>
+      <id>default</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>nautible-app-ms-product-core</module>
+        <module>nautible-app-ms-product-aws</module>
+        <module>nautible-app-ms-product-azure</module>
+        <module>nautible-app-ms-product-build</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>aws</id>
       <activation>
         <property>
-          <name>native</name>
+          <name>cloud</name>
+          <value>aws</value>
         </property>
       </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-failsafe-plugin</artifactId>
-            <version>${surefire-plugin.version}</version>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>integration-test</goal>
-                  <goal>verify</goal>
-                </goals>
-                <configuration>
-                  <systemPropertyVariables>
-                    <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
-                    <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-                    <maven.home>${maven.home}</maven.home>
-                  </systemPropertyVariables>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-      <properties>
-        <quarkus.package.type>native</quarkus.package.type>
-      </properties>
+      <modules>
+        <module>nautible-app-ms-product-core</module>
+        <module>nautible-app-ms-product-aws</module>
+        <module>nautible-app-ms-product-build</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>azure</id>
+      <activation>
+        <property>
+          <name>cloud</name>
+          <value>azure</value>
+        </property>
+      </activation>
+      <modules>
+        <module>nautible-app-ms-product-core</module>
+        <module>nautible-app-ms-product-azure</module>
+        <module>nautible-app-ms-product-build</module>
+      </modules>
     </profile>
   </profiles>
 </project>

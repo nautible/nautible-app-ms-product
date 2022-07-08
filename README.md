@@ -1,4 +1,4 @@
-# nautible-app-product project
+# nautible-app-ms-product project
 このドキュメントには商品アプリケーションについて記載する。  
 アプリケーション共通の内容については[こちら](https://github.com/nautible/docs/app-common/README.md)を参照。  
 Quarkusアプリケーション共通の内容については[こちら](https://github.com/nautible/docs/quarkus/README.md)を参照。
@@ -29,9 +29,31 @@ Quarkusアプリケーション共通の内容については[こちら](https:/
 * [kubectlのインストール](https://kubernetes.io/ja/docs/tasks/tools/install-kubectl/)（接続先の設定をminikubeにする
 * [skaffoldのインストール](https://skaffold.dev/docs/install/)
 * マニフェストファイルの配置
-  [nautible-app-product-manifest](https://github.com/nautible/nautible-app-product-manifest)をnautible-app-productプロジェクトと同一階層に配置する(git clone)。
+  [nautible-app-ms-product-manifest](https://github.com/nautible/nautible-app-ms-product-manifest)をnautible-app-ms-productプロジェクトと同一階層に配置する(git clone)。
 
 ### 実行
 - OpenAPI定義参照
   - 例) hello(稼働確認用)
     - http://localhost:8081/products/hello
+
+## サンプルアプリ利用手順
+
+### アプリケーション依存サービスのビルド
+
+```bash
+docker build -t nautible-app-ms-product-mysql:latest -f nautible-app-ms-product-build/src/test/docker/database/Dockerfile .
+```
+
+### アプリケーション依存サービスの起動
+
+manifestリポジトリでマニフェストを適用する
+
+```bash
+kubectl apply -k overlays/(aws|azure)/local-dev/dependencies
+```
+### skaffoldによるアプリケーション起動
+
+```bash
+skaffold dev --profile=(aws|azure) --port-forward
+```
+※wslなどのLinux環境で実行することを前提としています

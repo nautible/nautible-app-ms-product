@@ -1,0 +1,30 @@
+version: '3.7'
+services:
+  mysql:
+    container_name: nautible-app-ms-product-mysql
+    build:
+      context: database
+    volumes:
+      - ./database/mysql/data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DATABASE_PW}
+    ports:
+      - "3306:3306"
+    networks:
+      - nautible-app-ms-product-net
+  product:
+    container_name: nautible-app-ms-product
+    image: ogis/nautible-app-ms-product:latest
+    ports:
+      - "8080:8080"
+    networks:
+      - nautible-app-ms-product-net
+    depends_on: 
+      - mysql
+    environment:
+      DB_HOST: mysql
+      DB_USER: ${DATABASE_USER}
+      DB_PW: ${DATABASE_PW}
+networks:
+  nautible-app-ms-product-net:
+    driver: bridge
