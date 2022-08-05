@@ -21,12 +21,14 @@ kubectl run mysql-client -n nautible-app-ms -it --rm --image=mysql:5.7 --restart
 mysql -h product-db.vpc.nautible-dev.com -u root -p
 rootpassw0rd
 ```
+_※ ユーザ、パスワードは AWS Secrets Manager で管理_
 
 #### Azure での DB 接続
 ```
 mysql -h product-fs.product-fs.private.mysql.database.azure.com -u nautible_root -p
 Rootpassw0rd
 ```
+_※ ユーザ、パスワードは Azure Key Vault で管理_
 
 #### 実行する DDL / DML
 ```
