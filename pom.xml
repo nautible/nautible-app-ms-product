@@ -17,10 +17,10 @@
     <nautible.app.product.groupId>jp.co.ogis-ri.nautible.app</nautible.app.product.groupId>
     <nautible.app.product.name>nautible-app-ms-product</nautible.app.product.name>
     <nautible.app.product.version>1.0.0-SNAPSHOT</nautible.app.product.version>
-    <quarkus-plugin.version>1.13.6.Final</quarkus-plugin.version>
+    <quarkus-plugin.version>2.13.0.Final</quarkus-plugin.version>
     <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-    <quarkus.platform.version>1.13.6.Final</quarkus.platform.version>
+    <quarkus.platform.version>2.13.0.Final</quarkus.platform.version>
     <commons-lang3.version>3.11</commons-lang3.version>
     <swagger-annotations.version>1.6.2</swagger-annotations.version>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
