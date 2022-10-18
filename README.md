@@ -1,7 +1,7 @@
 # nautible-app-ms-product project
 このドキュメントには商品アプリケーションについて記載する。  
-アプリケーション共通の内容については[こちら](https://github.com/nautible/docs/app-common/README.md)を参照。  
-Quarkusアプリケーション共通の内容については[こちら](https://github.com/nautible/docs/quarkus/README.md)を参照。
+アプリケーション共通の内容については[こちら](https://github.com/nautible/docs/blob/main/referenceapp-architecture/README.md)を参照。
+Quarkusアプリケーション共通の内容については[こちら](https://github.com/nautible/docs/blob/main/reference/quarkus/README.md)を参照。
 
 ## アプリケーションの主要アーキテクチャ
 * [Java11](https://www.oracle.com/java/)
@@ -26,7 +26,7 @@ Quarkusアプリケーション共通の内容については[こちら](https:/
 ### 事前準備
 * [dockerのインストール](https://docs.docker.com/get-docker/)
 * [minikubeのインストール](https://kubernetes.io/ja/docs/tasks/tools/install-minikube/)
-* [kubectlのインストール](https://kubernetes.io/ja/docs/tasks/tools/install-kubectl/)（接続先の設定をminikubeにする
+* [kubectlのインストール](https://kubernetes.io/ja/docs/tasks/tools/install-kubectl/)（接続先の設定をminikubeにする）
 * [skaffoldのインストール](https://skaffold.dev/docs/install/)
 * マニフェストファイルの配置
   [nautible-app-ms-product-manifest](https://github.com/nautible/nautible-app-ms-product-manifest)をnautible-app-ms-productプロジェクトと同一階層に配置する(git clone)。
