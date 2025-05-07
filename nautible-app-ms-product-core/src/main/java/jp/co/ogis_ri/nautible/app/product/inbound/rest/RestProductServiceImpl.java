@@ -5,8 +5,8 @@ import jp.co.ogis_ri.nautible.app.product.common.annotation.RestService;
 import jp.co.ogis_ri.nautible.app.product.domain.Product;
 import jp.co.ogis_ri.nautible.app.product.domain.ProductService;
 
-import javax.inject.Inject;
-import javax.ws.rs.core.Response;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Response;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;

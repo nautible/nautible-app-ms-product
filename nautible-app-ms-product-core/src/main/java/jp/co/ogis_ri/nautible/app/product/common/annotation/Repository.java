@@ -9,9 +9,9 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Stereotype;
-import javax.interceptor.InterceptorBinding;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Stereotype;
+import jakarta.interceptor.InterceptorBinding;
 
 @Inherited
 @Target({ TYPE, METHOD })

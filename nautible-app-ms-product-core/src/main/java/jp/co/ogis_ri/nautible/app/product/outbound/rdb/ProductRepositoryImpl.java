@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-// import javax.inject.Inject;
-// import javax.persistence.EntityManager;
-// import javax.persistence.TypedQuery;
+// import jakarta.inject.Inject;
+// import jakarta.persistence.EntityManager;
+// import jakarta.persistence.TypedQuery;
 
 import io.quarkus.panache.common.Parameters;
 import io.quarkus.panache.common.Sort;

@@ -10,23 +10,23 @@
   <properties>
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
     <maven.compiler.parameters>true</maven.compiler.parameters>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <nautible.app.product.groupId>jp.co.ogis-ri.nautible.app</nautible.app.product.groupId>
     <nautible.app.product.name>nautible-app-ms-product</nautible.app.product.name>
     <nautible.app.product.version>1.0.0-SNAPSHOT</nautible.app.product.version>
-    <quarkus-plugin.version>2.13.0.Final</quarkus-plugin.version>
+    <quarkus-plugin.version>3.21.4</quarkus-plugin.version>
     <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-    <quarkus.platform.version>2.13.0.Final</quarkus.platform.version>
-    <commons-lang3.version>3.11</commons-lang3.version>
-    <swagger-annotations.version>1.6.2</swagger-annotations.version>
-    <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
-    <openapi-generator-maven-plugin.version>5.0.0</openapi-generator-maven-plugin.version>
-    <maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
-    <jandex.maven.plugin.version>1.1.0</jandex.maven.plugin.version>
+    <quarkus.platform.version>3.21.4</quarkus.platform.version>
+    <commons-lang3.version>3.17.0</commons-lang3.version>
+    <swagger-annotations.version>1.6.15</swagger-annotations.version>
+    <surefire-plugin.version>3.5.3</surefire-plugin.version>
+    <openapi-generator-maven-plugin.version>7.13.0</openapi-generator-maven-plugin.version>
+    <maven-failsafe-plugin.version>3.5.3</maven-failsafe-plugin.version>
+    <jandex.maven.plugin.version>1.2.3</jandex.maven.plugin.version>
   </properties>
 
   <dependencyManagement>
