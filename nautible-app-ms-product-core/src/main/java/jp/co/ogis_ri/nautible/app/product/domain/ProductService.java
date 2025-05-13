@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import jp.co.ogis_ri.nautible.app.product.api.rest.CreateProductRequest;
 import jp.co.ogis_ri.nautible.app.product.api.rest.UpdateProductRequest;
