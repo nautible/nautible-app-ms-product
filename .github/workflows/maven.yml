@@ -32,13 +32,14 @@ jobs:
       - name: Install actionlint
         run: go install github.com/rhysd/actionlint/cmd/actionlint@03d0035246f3e81f36aed592ffb4bebf33a03106 # v1.7.7
       - name: Run actionlint
-        run: actionlint ./github/workflows/maven.yml
+        run: actionlint
       - name: Install ghalint
         run: go install github.com/suzuki-shunsuke/ghalint/cmd/ghalint@b372f2711a9654201bf2600ad504d600186a99ef # v1.4.0
       - name: Run ghalint
         run: ghalint
 
   build:
+    needs: static-analysis
     runs-on: ubuntu-latest
 
     environment: develop # for azure oidc
