@@ -32,7 +32,7 @@ jobs:
       - name: Install actionlint
         run: go install github.com/rhysd/actionlint/cmd/actionlint@03d0035246f3e81f36aed592ffb4bebf33a03106 # v1.7.7
       - name: Run actionlint
-        run: actionlint
+        run: actionlint ./github/workflows/maven.yml
       - name: Install ghalint
         run: go install github.com/suzuki-shunsuke/ghalint/cmd/ghalint@b372f2711a9654201bf2600ad504d600186a99ef # v1.4.0
       - name: Run ghalint
@@ -104,17 +104,17 @@ jobs:
           ECR_REGISTRY: public.ecr.aws/nautible
           ECR_REPOSITORY: nautible-app-ms-product
         run: |
-          cd $GITHUB_WORKSPACE/nautible-app-ms-product-build
-          docker build --cache-from=$ECR_REGISTRY/$ECR_REPOSITORY:latest --build-arg BUILDKIT_INLINE_CACHE=1 -t $ECR_REGISTRY/$ECR_REPOSITORY:latest -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ./src/main/docker/Dockerfile.jvm .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          cd "$GITHUB_WORKSPACE"/nautible-app-ms-product-build
+          docker build --cache-from="$ECR_REGISTRY"/"$ECR_REPOSITORY":latest --build-arg BUILDKIT_INLINE_CACHE=1 -t "$ECR_REGISTRY"/"$ECR_REPOSITORY":latest -t "$ECR_REGISTRY"/"$ECR_REPOSITORY":"$IMAGE_TAG" -f ./src/main/docker/Dockerfile.jvm .
+          docker push "$ECR_REGISTRY"/"$ECR_REPOSITORY":latest
+          docker push "$ECR_REGISTRY"/"$ECR_REPOSITORY":"$IMAGE_TAG"
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
         if: steps.login-aws.outcome == 'success'
 
       # Azure
       - name: pacakge with Maven for Azure
         run: |
-          cd $GITHUB_WORKSPACE
+          cd "$GITHUB_WORKSPACE"
           mvn -B clean package -Dcloud=azure --file pom.xml -Dquarkus.package.type=fast-jar
       - name: Login via Azure CLI
         id: login-azure
@@ -142,10 +142,10 @@ jobs:
           ACR_REGISTRY: nautibledevacr.azurecr.io
           ACR_REPOSITORY: nautible-app-ms-product
         run: |
-          cd $GITHUB_WORKSPACE/nautible-app-ms-product-build
-          docker build --cache-from=$ACR_REGISTRY/$ACR_REPOSITORY:latest --build-arg BUILDKIT_INLINE_CACHE=1 -t $ACR_REGISTRY/$ACR_REPOSITORY:latest -t $ACR_REGISTRY/$ACR_REPOSITORY:$IMAGE_TAG -f ./src/main/docker/Dockerfile.jvm .
-          docker push $ACR_REGISTRY/$ACR_REPOSITORY:latest
-          docker push $ACR_REGISTRY/$ACR_REPOSITORY:$IMAGE_TAG
+          cd "$GITHUB_WORKSPACE"/nautible-app-ms-product-build
+          docker build --cache-from="$ACR_REGISTRY"/"$ACR_REPOSITORY":latest --build-arg BUILDKIT_INLINE_CACHE=1 -t "$ACR_REGISTRY"/"$ACR_REPOSITORY":latest -t "$ACR_REGISTRY"/"$ACR_REPOSITORY":"$IMAGE_TAG" -f ./src/main/docker/Dockerfile.jvm .
+          docker push "$ACR_REGISTRY"/"$ACR_REPOSITORY":latest
+          docker push "$ACR_REGISTRY"/"$ACR_REPOSITORY":"$IMAGE_TAG"
         if: steps.login-azure.outcome == 'success'
 
       - name: update feature branch image tag
@@ -157,15 +157,15 @@ jobs:
           APP_NAME: product
           ACR_REGISTRY: nautibledevacr.azurecr.io
         run: |
-          cd $GITHUB_WORKSPACE/nautible-app-ms-$APP_NAME-manifest
-          HTTP_STATUS=$(curl -H "Accept: application/vnd.github+json" -H "Authorization: token $TOKEN" https://api.github.com/repos/nautible/nautible-app-ms-$APP_NAME-manifest/branches/$BRANCH -o /dev/null -w '%{http_code}\n' -s)
+          cd "$GITHUB_WORKSPACE"/nautible-app-ms-"$APP_NAME"-manifest
+          HTTP_STATUS=$(curl -H "Accept: application/vnd.github+json" -H "Authorization: token $TOKEN" https://api.github.com/repos/nautible/nautible-app-ms-"$APP_NAME"-manifest/branches/"$BRANCH" -o /dev/null -w '%{http_code}\n' -s)
           if [ "$HTTP_STATUS" != '200' ]; then
             echo 'couldnt find remote branch. skip update manifest.'
             exit 0
           fi
-          git fetch origin $BRANCH && git checkout $BRANCH
-          sed -i 's/image: public.ecr.aws\/nautible\/nautible-app-ms-'$APP_NAME':\(.*\)/image: public.ecr.aws\/nautible\/nautible-app-ms-'$APP_NAME':'$IMAGE_TAG'/' ./overlays/aws/dev/$APP_NAME-deployment.yaml 
-          sed -i 's/image: '$ACR_REGISTRY'\/nautible-app-ms-'$APP_NAME':\(.*\)/image: '$ACR_REGISTRY'\/nautible-app-ms-'$APP_NAME':'$IMAGE_TAG'/' ./overlays/azure/dev/$APP_NAME-deployment.yaml 
+          git fetch origin "$BRANCH" && git checkout "$BRANCH"
+          sed -i 's/image: public.ecr.aws\/nautible\/nautible-app-ms-'"$APP_NAME"':\(.*\)/image: public.ecr.aws\/nautible\/nautible-app-ms-'"$APP_NAME"':'"$IMAGE_TAG"'/' ./overlays/aws/dev/"$APP_NAME"-deployment.yaml 
+          sed -i 's/image: '"$ACR_REGISTRY"'\/nautible-app-ms-'"$APP_NAME"':\(.*\)/image: '"$ACR_REGISTRY"'\/nautible-app-ms-'"$APP_NAME"':'"$IMAGE_TAG"'/' ./overlays/azure/dev/"$APP_NAME"-deployment.yaml 
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
@@ -182,14 +182,14 @@ jobs:
           APP_NAME: product
           ACR_REGISTRY: nautibledevacr.azurecr.io
         run: |
-          cd $GITHUB_WORKSPACE/nautible-app-ms-$APP_NAME-manifest
-          git fetch origin $BRANCH && git checkout $BRANCH
-          git checkout -b $TAG $BRANCH
-          sed -i 's/image: public.ecr.aws\/nautible\/nautible-app-ms-'$APP_NAME':\(.*\)/image: public.ecr.aws\/nautible\/nautible-app-ms-'$APP_NAME':'$IMAGE_TAG'/' ./overlays/aws/dev/$APP_NAME-deployment.yaml 
-          sed -i 's/image: '$ACR_REGISTRY'\/nautible-app-ms-'$APP_NAME':\(.*\)/image: '$ACR_REGISTRY'\/nautible-app-ms-'$APP_NAME':'$IMAGE_TAG'/' ./overlays/azure/dev/$APP_NAME-deployment.yaml 
+          cd "$GITHUB_WORKSPACE"/nautible-app-ms-"$APP_NAME"-manifest
+          git fetch origin "$BRANCH" && git checkout "$BRANCH"
+          git checkout -b "$TAG" "$BRANCH"
+          sed -i 's/image: public.ecr.aws\/nautible\/nautible-app-ms-'"$APP_NAME"':\(.*\)/image: public.ecr.aws\/nautible\/nautible-app-ms-'"$APP_NAME"':'"$IMAGE_TAG"'/' ./overlays/aws/dev/"$APP_NAME"-deployment.yaml 
+          sed -i 's/image: '"$ACR_REGISTRY"'\/nautible-app-ms-'"$APP_NAME"':\(.*\)/image: '"$ACR_REGISTRY"'\/nautible-app-ms-'"$APP_NAME"':'"$IMAGE_TAG"'/' ./overlays/azure/dev/"$APP_NAME"-deployment.yaml 
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
           git commit -m "update manifest"
-          git push --set-upstream origin $TAG
-          curl -X POST -H "Accept: application/vnd.github+json" -H "Authorization: token $TOKEN" "https://api.github.com/repos/nautible/nautible-app-ms-$APP_NAME-manifest/pulls" -d '{"title": "new image deploy request", "head": "nautible:'$TAG'", "base": "'$BRANCH'"}'  -o /dev/null -w 'httpstatus:%{http_code}\n' -s
+          git push --set-upstream origin "$TAG"
+          curl -X POST -H "Accept: application/vnd.github+json" -H "Authorization: token $TOKEN" "https://api.github.com/repos/nautible/nautible-app-ms-$APP_NAME-manifest/pulls" -d '{"title": "new image deploy request", "head": "nautible:'"$TAG"'", "base": "'"$BRANCH"'"}'  -o /dev/null -w 'httpstatus:%{http_code}\n' -s
