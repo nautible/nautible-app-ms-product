@@ -164,9 +164,10 @@ jobs:
         with:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
-          permission-issues: write
-          repositorys: nautible-app-ms-product,nautible-app-ms-product-manifest
-
+          permission-contents: write
+          repositories: |
+            nautible-app-ms-product
+            nautible-app-ms-product-manifest
       - name: Checkout manifest repo
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
