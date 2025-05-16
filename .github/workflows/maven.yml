@@ -97,8 +97,9 @@ jobs:
           DOCKER_BUILDKIT: 1
           ECR_REGISTRY: public.ecr.aws/nautible
           ECR_REPOSITORY: nautible-app-ms-product
+          APP_NAME: product
         run: |
-          cd "$GITHUB_WORKSPACE"/nautible-app-ms-product-build
+          cd "$GITHUB_WORKSPACE"/nautible-app-ms-"$APP_NAME"-build
           docker build --cache-from="$ECR_REGISTRY"/"$ECR_REPOSITORY":latest --build-arg BUILDKIT_INLINE_CACHE=1 -t "$ECR_REGISTRY"/"$ECR_REPOSITORY":latest -t "$ECR_REGISTRY"/"$ECR_REPOSITORY":"$IMAGE_TAG" -f ./src/main/docker/Dockerfile.jvm .
           docker push "$ECR_REGISTRY"/"$ECR_REPOSITORY":latest
           docker push "$ECR_REGISTRY"/"$ECR_REPOSITORY":"$IMAGE_TAG"
@@ -135,8 +136,9 @@ jobs:
           DOCKER_BUILDKIT: 1
           ACR_REGISTRY: nautibledevacr.azurecr.io
           ACR_REPOSITORY: nautible-app-ms-product
+          APP_NAME: product
         run: |
-          cd "$GITHUB_WORKSPACE"/nautible-app-ms-product-build
+          cd "$GITHUB_WORKSPACE"/nautible-app-ms-"$APP_NAME"-build
           docker build --cache-from="$ACR_REGISTRY"/"$ACR_REPOSITORY":latest --build-arg BUILDKIT_INLINE_CACHE=1 -t "$ACR_REGISTRY"/"$ACR_REPOSITORY":latest -t "$ACR_REGISTRY"/"$ACR_REPOSITORY":"$IMAGE_TAG" -f ./src/main/docker/Dockerfile.jvm .
           docker push "$ACR_REGISTRY"/"$ACR_REPOSITORY":latest
           docker push "$ACR_REGISTRY"/"$ACR_REPOSITORY":"$IMAGE_TAG"
